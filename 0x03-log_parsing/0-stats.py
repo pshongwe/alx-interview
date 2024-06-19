@@ -16,10 +16,8 @@ line_count = 0
 def parse_log_line(line):
     """
     Parses a line from the log and extracts useful metrics.
-
     Args:
         line (str): A single line from the log.
-
     Returns:
         dict: A dictionary containing the status code and file size.
     """
@@ -55,23 +53,28 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 
-signal.signal(signal.SIGINT, signal_handler)
+def main():
+    """main"""
+    global total_file_size, line_count
+    signal.signal(signal.SIGINT, signal_handler)
+    try:
+        while True:
+            line = sys.stdin.readline().strip()
+            if not line:
+                break
+            metrics = parse_log_line(line)
+            if metrics:
+                total_file_size += metrics['size']
+                status_code = metrics['status']
+                if status_code in status_code_counts:
+                    status_code_counts[status_code] += 1
+                line_count += 1
+                if line_count % 10 == 0:
+                    print_metrics()
+    except KeyboardInterrupt:
+        print_metrics()
+        sys.exit(0)
 
 
-try:
-    while True:
-        line = sys.stdin.readline().strip()
-        if not line:
-            break
-        metrics = parse_log_line(line)
-        if metrics:
-            total_file_size += metrics['size']
-            status_code = metrics['status']
-            if status_code in status_code_counts:
-                status_code_counts[status_code] += 1
-            line_count += 1
-            if line_count % 10 == 0:
-                print_metrics()
-except KeyboardInterrupt:
-    print_metrics()
-    sys.exit(0)
+if __name__ == '__main__':
+    main()
