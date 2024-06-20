@@ -31,11 +31,11 @@ def print_metrics(total_file_size, status_code_counts):
     """
     Prints the accumulated metrics.
     """
-    print('File size: {:d}'.format(total_file_size), flush=True)
+    print('File size: {:d}'.format(total_file_size), flush=False)
     for status_code in sorted(status_code_counts):
         count = status_code_counts[status_code]
         if count > 0:
-            print('{:s}: {:d}'.format(status_code, num), flush=True)
+            print('{:s}: {:d}'.format(status_code, num), flush=False)
 
 
 def main():
@@ -66,7 +66,7 @@ def main():
                 line_count += 1
                 if line_count % 10 == 0:
                     print_metrics(total_file_size, status_code_counts)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, EOFError):
         print_metrics(total_file_size, status_code_counts)
         sys.exit(0)
 
