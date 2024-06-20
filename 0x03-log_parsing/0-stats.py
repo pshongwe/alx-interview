@@ -22,8 +22,8 @@ def parse_log_line(line):
     match = re.match(log_pattern, line)
     if match:
         return {
-            'status': int(match.group('status')),
-            'size': int(match.group('size'))
+            'status_code': int(match.group('status')),
+            'file_size': int(match.group('size'))
         }
     return None
 
@@ -69,8 +69,8 @@ def main():
                 break
             metrics = parse_log_line(line)
             if metrics:
-                total_file_size += metrics['size']
-                status_code = metrics['status']
+                total_file_size += metrics['file_size']
+                status_code = metrics['status_code']
                 if status_code in status_code_counts:
                     status_code_counts[status_code] += 1
                 line_count += 1
