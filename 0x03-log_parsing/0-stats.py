@@ -31,11 +31,11 @@ def print_metrics(total_file_size, status_code_counts):
     """
     Prints the accumulated metrics.
     """
-    print(f"File size: {total_file_size}")
+    print('File size: {:d}'.format(total_file_size), flush=True)
     for status_code in sorted(status_code_counts):
         count = status_code_counts[status_code]
         if count > 0:
-            print(f"{status_code}: {count}")
+            print('{:s}: {:d}'.format(status_code, num), flush=True)
 
 
 def main():
