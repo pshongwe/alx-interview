@@ -4,7 +4,6 @@ A script to parse and analyze HTTP request logs.
 """
 import sys
 import re
-import signal
 
 
 def parse_log_line(line):
@@ -39,14 +38,6 @@ def print_metrics(total_file_size, status_code_counts):
             print(f"{status_code}: {count}")
 
 
-def signal_handler(sig, frame):
-    """
-    Handles interrupt signals to print metrics before exiting.
-    """
-    print_metrics(total_file_size, status_code_counts)
-    sys.exit(0)
-
-
 def main():
     """main"""
     total_file_size = 0
@@ -61,7 +52,6 @@ def main():
         500: 0,
     }
     line_count = 0
-    signal.signal(signal.SIGINT, signal_handler)
     try:
         while True:
             line = input()
@@ -77,7 +67,7 @@ def main():
                 if line_count % 10 == 0:
                     print_metrics(total_file_size, status_code_counts)
     except KeyboardInterrupt:
-        print_metrics()
+        print_metrics(total_file_size, status_code_counts)
         sys.exit(0)
 
 
